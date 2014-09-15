@@ -1,3 +1,5 @@
+#### _Emmerge Fork -- supports sending paginated subscriptions through `meteorhacks:subs-manager` package_
+
 # Meteor Paginated Subscription
 
 This package is an experiment that adds pagination to Meteor's standard subscriptions. It's a byproduct of the [Telescope project](http://telesc.pe).
