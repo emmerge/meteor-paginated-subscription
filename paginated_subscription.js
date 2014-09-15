@@ -53,13 +53,24 @@ Meteor.subscribeWithPagination = function (/*name, arguments, perPage */) {
   }
   
   var handle = new PaginatedSubscriptionHandle(perPage);
-  
+
+  var subManager;
+  if (_.last(args) instanceof SubsManager)
+    subManager = args.pop();
+
   var argAutorun = Meteor.autorun(function() {
     var ourArgs = _.map(args, function(arg) {
       return _.isFunction(arg) ? arg() : arg;
     });
-   
-    var subHandle = Meteor.subscribe.apply(this, ourArgs.concat([handle.limit(), cb]));
+    ourArgs.push(handle.limit());
+    if (cb)
+      ourArgs.push(cb);
+
+    var subHandle;
+    if (_.isObject(subManager))
+      subHandle = subManager.subscribe.apply(subManager, ourArgs);
+    else
+      subHandle = Meteor.subscribe.apply(this, ourArgs);
     
     // whenever the sub becomes ready, we are done. This may happen right away
     // if we are re-subscribing to an already ready subscription.
